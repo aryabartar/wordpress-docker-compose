@@ -4,7 +4,7 @@ services:
   wp:
     image: wordpress:latest # https://hub.docker.com/_/wordpress/
     ports:
-      - ${IP}:80:80 # change ip if required
+      - ${IP}:2020:80 # change ip if required
     volumes:
       - ./config/php.conf.ini:/usr/local/etc/php/conf.d/conf.ini
       - ./wp-app:/var/www/html # Full wordpress project
@@ -37,7 +37,7 @@ services:
       PMA_PORT: 3306
       MYSQL_ROOT_PASSWORD: "${DB_ROOT_PASSWORD}"
     ports:
-      - ${IP}:8080:80
+      - ${IP}:2021:80
     links:
       - db:db
 
