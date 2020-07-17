@@ -1,50 +1,38 @@
 version: '3'
 
 services:
-  wp:
-    image: wordpress:latest # https://hub.docker.com/_/wordpress/
+  wp-classes:
+    image: erfun/ioncube_wp # https://hub.docker.com/_/wordpress/
     ports:
-      - ${IP}:2020:80 # change ip if required
+      - ${IP}:3020:80 # change ip if required
     volumes:
       - ./config/php.conf.ini:/usr/local/etc/php/conf.d/conf.ini
       - ./wp-app:/var/www/html # Full wordpress project
       #- ./plugin-name/trunk/:/var/www/html/wp-content/plugins/plugin-name # Plugin development
       #- ./theme-name/trunk/:/var/www/html/wp-content/themes/theme-name # Theme development
     environment:
-      WORDPRESS_DB_HOST: db
+      WORDPRESS_DB_HOST: db-classes
       WORDPRESS_DB_NAME: "${DB_NAME}"
       WORDPRESS_DB_USER: root
       WORDPRESS_DB_PASSWORD: "${DB_ROOT_PASSWORD}"
     depends_on:
-      - db
+      - db-classes
     links:
-      - db
+      - db-classes
 
-  wpcli:
+  wpcli-classes:
     image: wordpress:cli
     volumes:
       - ./config/php.conf.ini:/usr/local/etc/php/conf.d/conf.ini
       - ./wp-app:/var/www/html
     depends_on:
-      - db
-      - wp
+      - db-classes
+      - wp-classes
 
-  pma:
-    image: phpmyadmin/phpmyadmin
-    environment:
-      # https://docs.phpmyadmin.net/en/latest/setup.html#docker-environment-variables
-      PMA_HOST: db
-      PMA_PORT: 3306
-      MYSQL_ROOT_PASSWORD: "${DB_ROOT_PASSWORD}"
-    ports:
-      - ${IP}:2021:80
-    links:
-      - db:db
-
-  db:
+  db-classes:
     image: mysql:latest # https://hub.docker.com/_/mysql/ - or mariadb https://hub.docker.com/_/mariadb
     ports:
-      - ${IP}:3306:3306 # change ip if required
+      - ${IP}:3307:3306 # change ip if required
     command: [
         '--default_authentication_plugin=mysql_native_password',
         '--character-set-server=utf8mb4',
@@ -52,10 +40,10 @@ services:
     ]
     volumes:
       - ./wp-data:/docker-entrypoint-initdb.d
-      - db_data:/var/lib/mysql
+      - db_data_classes:/var/lib/mysql
     environment:
       MYSQL_DATABASE: "${DB_NAME}"
       MYSQL_ROOT_PASSWORD: "${DB_ROOT_PASSWORD}"
 
 volumes:
-  db_data:
+  db_data_classes:
