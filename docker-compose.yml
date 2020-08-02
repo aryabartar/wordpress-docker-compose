@@ -20,6 +20,17 @@ services:
     links:
       - db-classes
 
+  phpmyadmin:
+    depends_on:
+      - db
+    image: phpmyadmin/phpmyadmin
+    restart: always
+    ports:
+      - '8099:80'
+    environment:
+      PMA_HOST: db-classes
+      MYSQL_ROOT_PASSWORD: "${DB_ROOT_PASSWORD}"
+      
   wpcli-classes:
     image: wordpress:cli
     volumes:
