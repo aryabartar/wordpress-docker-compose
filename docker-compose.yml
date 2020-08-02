@@ -22,7 +22,7 @@ services:
 
   phpmyadmin:
     depends_on:
-      - db
+      - db-classes
     image: phpmyadmin/phpmyadmin
     restart: always
     ports:
